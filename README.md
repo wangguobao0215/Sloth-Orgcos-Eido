@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="sloth-orgcos-kernel-eido/assets/sloth-avatar-round.png" width="120" />
+  <img src="orgcos-kernel/assets/sloth-avatar-round.png" width="120" />
 </p>
 
 <h1 align="center">Sloth-Orgcos-Eido</h1>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="sloth-orgcos-kernel-eido/assets/qrcode.jpg" width="140" /><br/>
+  <img src="orgcos-kernel/assets/qrcode.jpg" width="140" /><br/>
   <sub>扫码关注 <strong>树懒老K</strong> · 获取更多 AI 技能</sub><br/>
   <em>慢一点，深一度</em>
 </p>
@@ -23,24 +23,24 @@
 
 | # | 技能名 | 类别 | 职责 | 用户可触发 | 版本 |
 |---|--------|------|------|-----------|------|
-| 1 | `sloth-sloth-orgcos-architect-eido-eido` | 主控 | 全流程编排入口，调度所有子技能 | 是（主入口） | 1.0.0 |
-| 2 | `sloth-sloth-orgcos-kernel-eido-eido` | 内核 | T1 通用内核约束集（Schema/规则/API规范） | 否（被依赖） | 1.0.0 |
+| 1 | `sloth-orgcos-architect-eido` | 主控 | 全流程编排入口，调度所有子技能 | 是（主入口） | 1.0.0 |
+| 2 | `sloth-orgcos-kernel-eido` | 内核 | T1 通用内核约束集（Schema/规则/API规范） | 否（被依赖） | 1.0.0 |
 | 3 | `sloth-orgcos-ontology-eido` | 层级 | L1 本体层 + L4 语义层采集 | 是 | 1.0.0 |
 | 4 | `sloth-orgcos-strategy-ops-eido` | 层级 | L2 战略层 + L3 运作层采集 | 是 | 1.0.0 |
 | 5 | `sloth-orgcos-memory-char-eido` | 层级 | L5 记忆层 + L6 性格层采集 | 是 | 1.0.0 |
-| 6 | `sloth-orgcos-governance-eido` | 引擎 | 治理引擎（G1-G5 规则 + 12 字段校验） | 是 | 1.0.0 |
+| 6 | `sloth-orgcos-governance-eido` | 引擎 | 治理引擎（G1-G6 规则 + 12 字段校验） | 是 | 1.0.0 |
 | 7 | `sloth-orgcos-seci-eido` | 引擎 | SECI 知识转化引擎（8 周螺旋） | 是 | 1.0.0 |
 | 8 | `sloth-orgcos-blueprint-eido` | 扩展 | T2 行业蓝图管理（加载/验证/定制） | 是 | 1.0.0 |
 | 9 | `sloth-orgcos-validator-eido` | 工具 | 质量验证（三重校验 + 质量门禁） | 是 | 1.0.0 |
 | 10 | `sloth-orgcos-api-eido` | 工具 | AI 消费 API 标准化（4 端点 + SDK） | 是 | 1.0.0 |
-| 11 | `sloth-orgcos-report-eido` | 工具 | 报告生成（4 种类型 HTML 报告） | 是 | 1.0.0 |
+| 11 | `sloth-orgcos-report-eido` | 工具 | 报告生成（5 种类型 HTML 报告） | 是 | 1.0.0 |
 | 12 | `sloth-orgcos-pipeline-eido` | 编排 | 后台编排引擎（技能调度 + 错误恢复） | 是 | 1.0.0 |
 
 ## 依赖关系图
 
 ```
                           ┌──────────────────┐
-                          │  sloth-orgcos-architect-eido │ ← 用户主入口
+                          │  orgcos-architect │ ← 用户主入口
                           │   (主控技能)      │
                           └────────┬─────────┘
                                    │ 调度 10 个子技能
@@ -54,7 +54,7 @@
         └──────────────┴─────────────┴─────────────┴─────────────┘
                                │ 依赖
                     ┌──────────┴──────────┐
-                    │    sloth-orgcos-kernel-eido    │ ← 所有技能的基础
+                    │    orgcos-kernel    │ ← 所有技能的基础
                     │     (T1 内核)       │
                     └─────────────────────┘
 
@@ -66,7 +66,7 @@
 ### 完整构建（推荐）
 ```
 用户: "帮我做 OrgCOS"
-→ sloth-orgcos-architect-eido 接管，8 阶段全流程引导
+→ orgcos-architect 接管，8 阶段全流程引导
 ```
 
 ### 单独使用
@@ -87,8 +87,8 @@ P0 项目启动 → P1 内核初始化 → P2 蓝图加载 → P3 L1+L4 基础�
 
 | 阶段 | 调度技能 | 质量门禁 |
 |------|---------|---------|
-| P0 | sloth-orgcos-architect-eido | 项目配置完整 |
-| P1 | sloth-orgcos-kernel-eido | 内核文件完整 |
+| P0 | orgcos-architect | 项目配置完整 |
+| P1 | orgcos-kernel | 内核文件完整 |
 | P2 | orgcos-blueprint | 蓝图兼容性通过 |
 | P3 | orgcos-ontology | 覆盖率 ≥ 60% |
 | P4 | orgcos-strategy-ops | L3→L2 追溯率 ≥ 80% |
@@ -124,7 +124,7 @@ orgcos-skills/
 ├── README.md                          ← 本文件（家族导航）
 ├── LICENSE                            ← MIT 许可证
 ├── CHANGELOG.md                       ← 家族版本日志
-├── sloth-orgcos-kernel-eido/                     ← T1 内核（基础约束）
+├── orgcos-kernel/                     ← T1 内核（基础约束）
 │   ├── SKILL.md
 │   ├── README.md / README_EN.md
 │   ├── LICENSE / CHANGELOG.md / .gitignore
@@ -138,7 +138,7 @@ orgcos-skills/
 │       │   └── relations.yaml
 │       └── governance/
 │           └── rules.yaml
-├── sloth-orgcos-architect-eido/                  ← 主控技能
+├── orgcos-architect/                  ← 主控技能
 │   ├── SKILL.md + README.md/EN + LICENSE + CHANGELOG.md + .gitignore + assets/
 ├── orgcos-ontology/                   ← L1+L4
 │   ├── (同上标准 7 件套)
