@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://orgcos.dev/schema/governance-meta/v1.0.0",
+  "title": "OrgCOS Governance Metadata",
+  "description": "12 字段治理元数据 — 所有 Context Entry 必须携带",
+  "type": "object",
+  "required": ["owner", "modifier", "valid_from", "valid_until", "confidence", "version", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "owner": {
+      "type": "object",
+      "required": ["role", "name"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      },
+      "description": "准确性负责人"
+    },
+    "modifier": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "name"],
+        "properties": {
+          "role": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 }
+        }
+      },
+      "description": "修改权限人（至少 1 人）"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date",
+      "description": "生效日期"
+    },
+    "valid_until": {
+      "oneOf": [
+        { "type": "string", "format": "date" },
+        { "type": "string", "pattern": "^event:.+$" }
+      ],
+      "description": "过期日期或触发事件（event:xxx）"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "可信度评分（0-1）"
+    },
+    "evidence_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "支撑证据数量"
+    },
+    "conflict_resolution": {
+      "oneOf": [
+        { "type": "string", "pattern": "^rule-.+$" },
+        { "type": "null" }
+      ],
+      "description": "冲突仲裁规则引用"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "description": "SemVer 版本号"
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["who", "when", "what"],
+        "properties": {
+          "who": { "type": "string" },
+          "when": { "type": "string", "format": "date-time" },
+          "what": { "type": "string" },
+          "why": { "type": "string" }
+        }
+      },
+      "description": "变更历史（自动追加）"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["workshop", "survey", "system_log", "document", "interview"],
+      "description": "数据来源类型"
+    },
+    "last_challenged": {
+      "oneOf": [
+        { "type": "string", "format": "date" },
+        { "type": "null" }
+      ],
+      "description": "最近被质疑日期"
+    },
+    "challenge_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "被质疑次数"
+    }
+  }
+}

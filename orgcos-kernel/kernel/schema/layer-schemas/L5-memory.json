@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L5 Memory Layer - Content Schema",
+  "description": "Defines content field constraints for L5 MemoryEntry entries",
+  "type": "object",
+  "required": [
+    "memory_type",
+    "content",
+    "lessons"
+  ],
+  "properties": {
+    "memory_type": {
+      "type": "string",
+      "enum": [
+        "case",
+        "success",
+        "failure",
+        "inflection",
+        "practice",
+        "antipattern"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "situation": {
+          "type": "string"
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "competitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "string",
+      "description": "The key decision made (for case type)"
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string"
+        },
+        "validation": {
+          "type": "string"
+        },
+        "metrics": {
+          "type": "object"
+        }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "root_causes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For failure type"
+    },
+    "early_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Signals that were ignored (for failure type)"
+    },
+    "prevention_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "How to prevent recurrence"
+    },
+    "replicable_patterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For success type"
+    },
+    "warning_signs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For antipattern type"
+    },
+    "related_strategy_rule": {
+      "type": "string",
+      "description": "L2 StrategicStatement ID (P2 traceability)"
+    },
+    "evidence_strength": {
+      "type": "string",
+      "enum": [
+        "anecdotal",
+        "single_case",
+        "multi_case",
+        "statistically_validated"
+      ]
+    },
+    "encoding_method": {
+      "type": "string",
+      "enum": [
+        "SECI_socialization",
+        "SECI_externalization",
+        "SECI_combination",
+        "system_log",
+        "interview"
+      ]
+    },
+    "freshness_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Are lessons still applicable in current market (Nonaka)"
+    },
+    "applicable_when": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Conditions under which this knowledge applies"
+    }
+  },
+  "additionalProperties": false
+}

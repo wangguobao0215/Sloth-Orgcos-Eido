@@ -1,0 +1,64 @@
+# OrgCOS Event Propagation Rules
+# Source: T1 Kernel Design v1.0, Section 6
+
+propagation:
+  # Event bus configuration
+  event_bus:
+    technology: "NATS JetStream"
+    subject_prefix: "orgcos.events"
+    delivery: "at_least_once"
+    retention_days: 90
+
+  # Standard propagation patterns
+  patterns:
+    fan_out:
+      description: "Event propagates to all target layers in parallel"
+      applicable_events: ["STRATEGY_CHANGE", "ORG_RESTRUCTURE", "CULTURE_SURVEY"]
+
+    chain:
+      description: "Event propagates sequentially through layers"
+      applicable_events: ["TERM_CHANGE"]
+
+    immediate:
+      description: "Event requires real-time processing"
+      applicable_events: ["ENTRY_EXPIRED", "CONFLICT_DETECTED"]
+
+  # Failure handling
+  failure_handling:
+    on_propagation_failure:
+      strategy: "retry_with_escalation"
+      max_retries: 3
+      retry_interval_seconds: 300
+      on_final_failure: "create_manual_intervention_task"
+
+    on_target_entry_missing:
+      strategy: "log_and_skip"
+      description: "When target entry doesn't exist, log warning and continue"
+
+    on_sla_breach:
+      strategy: "escalate_to_owner"
+      notification: "email + dashboard_alert"
+
+  # Event interface (TypeScript)
+  event_interface: |
+    interface OrgCOSEvent {
+      event_id: string;
+      event_type: OrgCOSEventType;
+      source_layer: 'L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6';
+      source_entry_id: string;
+      target_layers: string[];
+      propagation_action: string;
+      priority: 'high' | 'medium' | 'low';
+      sla_deadline: Date;
+      payload: Record<string, any>;
+      created_at: Date;
+    }
+
+    interface PropagationResult {
+      event_id: string;
+      target_layer: string;
+      status: 'completed' | 'pending_review' | 'escalated' | 'skipped';
+      affected_entries: string[];
+      actions_taken: string[];
+      completed_at?: Date;
+    }

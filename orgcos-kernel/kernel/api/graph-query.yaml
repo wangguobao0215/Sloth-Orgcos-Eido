@@ -1,0 +1,70 @@
+# Graph Query API Endpoint
+# GET /api/v1/graph/query
+
+paths:
+  /graph/query:
+    get:
+      summary: "Graph Query - entities, relationships, paths"
+      description: "Query the OrgCOS knowledge graph for entities, their relationships, and path traversals"
+      operationId: "graphQuery"
+      parameters:
+        - name: entity_type
+          in: query
+          schema: {type: string}
+          description: "Filter by entity type (Enterprise, OrgUnit, Role, Person, Customer, Product, Partner, Competitor, Market, Capability)"
+        - name: entity_id
+          in: query
+          schema: {type: string}
+          description: "Specific entity ID to retrieve"
+        - name: relation_type
+          in: query
+          schema: {type: string}
+          description: "Filter by relationship type (BELONGS_TO, REPORTS_TO, HAS_ROLE, etc.)"
+        - name: depth
+          in: query
+          schema: {type: integer, default: 2, minimum: 1, maximum: 5}
+          description: "Traversal depth for relationship expansion"
+        - name: perspective
+          in: query
+          schema: {type: string, enum: [strategic, operational, technical]}
+          description: "Multi-perspective view to include (P7)"
+        - name: min_confidence
+          in: query
+          schema: {type: number, default: 0.5, minimum: 0, maximum: 1}
+          description: "Minimum confidence threshold for included entries"
+      responses:
+        "200":
+          description: "Query results"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: {type: string}
+                        type: {type: string}
+                        name: {type: string}
+                        attributes: {type: object}
+                        governance:
+                          $ref: "../api/openapi.yaml#/components/schemas/GovernanceMetadata"
+                  relationships:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source_id: {type: string}
+                        target_id: {type: string}
+                        type: {type: string}
+                        attributes: {type: object}
+                  metadata:
+                    type: object
+                    properties:
+                      total_count: {type: integer}
+                      query_time_ms: {type: number}
+                      warnings: {type: array, items: {type: string}}
+        "400":
+          description: "Invalid query parameters"

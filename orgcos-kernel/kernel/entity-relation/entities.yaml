@@ -1,0 +1,240 @@
+# OrgCOS T1 通用实体定义
+# E1: Entity-Relation Standard — 10 类通用实体
+# 所有行业蓝图和企业实例在此基础上扩展
+
+version: "1.0.0"
+last_updated: "2026-11-03"
+
+entities:
+  - type: Enterprise
+    label: 企业
+    description: 法律意义上的企业实体
+    attributes:
+      - name: name
+        type: string
+        required: true
+        description: 企业名称
+      - name: industry
+        type: string
+        required: true
+        description: 所属行业
+      - name: scale
+        type: enum
+        values: [micro, small, medium, large, enterprise]
+        required: true
+        description: 企业规模
+      - name: stage
+        type: enum
+        values: [startup, growth, mature, declining, transformation]
+        required: false
+        description: 发展阶段
+
+  - type: OrgUnit
+    label: 组织单元
+    description: 企业内部组织单元（部门/事业部/团队）
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: type
+        type: enum
+        values: [division, department, team, center, office]
+        required: true
+      - name: parent_ref
+        type: entity_ref
+        target: OrgUnit
+        required: false
+        description: 上级组织单元
+
+  - type: Role
+    label: 角色
+    description: 组织中的角色定义
+    attributes:
+      - name: title
+        type: string
+        required: true
+      - name: responsibilities
+        type: array[string]
+        required: true
+      - name: authority_scope
+        type: string
+        required: false
+        description: 权限范围描述
+
+  - type: Person
+    label: 人员
+    description: 组织中的人员
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: expertise
+        type: array[string]
+        required: false
+      - name: tenure
+        type: enum
+        values: [new, junior, mid, senior, veteran]
+        required: false
+
+  - type: Customer
+    label: 客户
+    description: 企业客户
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: tier
+        type: enum
+        values: [S, A, B, C]
+        required: true
+        description: 客户等级
+      - name: industry
+        type: string
+        required: false
+      - name: relationship_depth
+        type: enum
+        values: [transactional, collaborative, strategic, partner]
+        required: false
+
+  - type: Product
+    label: 产品/服务
+    description: 企业提供的产品或服务
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: category
+        type: string
+        required: true
+      - name: lifecycle_stage
+        type: enum
+        values: [concept, development, launch, growth, mature, decline, eol]
+        required: false
+
+  - type: Partner
+    label: 合作伙伴
+    description: 企业合作伙伴
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: partnership_type
+        type: enum
+        values: [supplier, distributor, technology, strategic, channel]
+        required: true
+      - name: strategic_value
+        type: enum
+        values: [low, medium, high, critical]
+        required: false
+
+  - type: Competitor
+    label: 竞争对手
+    description: 竞争对手
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: threat_level
+        type: enum
+        values: [low, medium, high, critical]
+        required: false
+      - name: differentiation
+        type: string
+        required: false
+        description: 与该竞争对手的核心差异点
+
+  - type: Market
+    label: 市场
+    description: 目标市场
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: size
+        type: string
+        required: false
+        description: 市场规模描述
+      - name: growth_rate
+        type: enum
+        values: [declining, flat, slow_growth, fast_growth, emerging]
+        required: false
+      - name: maturity
+        type: enum
+        values: [emerging, growing, mature, declining]
+        required: false
+
+  - type: Capability
+    label: 能力
+    description: 企业核心能力
+    attributes:
+      - name: name
+        type: string
+        required: true
+      - name: maturity_level
+        type: enum
+        values: [initial, repeatable, defined, managed, optimizing]
+        required: false
+      - name: strategic_importance
+        type: enum
+        values: [core, supporting, generic]
+        required: true
+        description: 战略重要性（核心/支撑/通用）
+
+# ─────────────────────────────────────────────────────────────────────────────
+# P7 多视角正交设计（Multi-Perspective Orthogonal Design）
+# ─────────────────────────────────────────────────────────────────────────────
+# 每个实体可附加 multi_perspective 元数据，从三个正交视角描述同一实体：
+#
+#   strategic_view  — CEO/高管视角：这个实体对战略意味着什么？
+#   operational_view — 部门经理视角：这个实体在日常运营中如何发挥作用？
+#   technical_view   — 技术/AI视角：这个实体在系统/数据层面如何实现？
+#
+# 示例：Customer 实体的多视角描述
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ strategic_view:                                                         │
+# │   "S级客户是收入结构稳定器，贡献 60% 营收但仅占客户数 15%"              │
+# │ operational_view:                                                       │
+# │   "S级客户要求专属服务团队、季度业务回顾、48h 响应 SLA"                 │
+# │ technical_view:                                                         │
+# │   "S级客户在 CRM 中有独立数据域，API 调用优先级 P0，数据保留 5 年"       │
+# └─────────────────────────────────────────────────────────────────────────┘
+#
+# 使用规则：
+#   1. multi_perspective 是可选字段，但 L1/L2/L3 层实体建议必须填写
+#   2. 三个视角的内容应保持逻辑一致，但允许信息密度和侧重点不同
+#   3. 当视角间出现冲突时，按 conflict-hierarchy.yaml 的层级优先级解决
+#
+# 数据结构：
+multi_perspective_schema:
+  type: object
+  properties:
+    strategic_view:
+      type: string
+      description: 战略视角描述（面向决策层）
+      max_length: 500
+    operational_view:
+      type: string
+      description: 运营视角描述（面向管理层）
+      max_length: 500
+    technical_view:
+      type: string
+      description: 技术视角描述（面向技术团队/AI系统）
+      max_length: 500
+  required: []  # 可选字段，但建议 L1/L2/L3 实体填写
+
+# 各实体类型的视角示例：
+perspective_examples:
+  Customer:
+    strategic_view: "S级客户是收入结构稳定器，贡献 60% 营收但仅占客户数 15%"
+    operational_view: "S级客户要求专属服务团队、季度业务回顾、48h 响应 SLA"
+    technical_view: "S级客户在 CRM 中有独立数据域，API 调用优先级 P0"
+  
+  Product:
+    strategic_view: "A产品线是利润引擎（毛利 45%），B产品线是流量入口（毛利 15%）"
+    operational_view: "A产品线需高级技工操作，B产品线可外包组装"
+    technical_view: "A产品 BOM 深度 6 层，需 ERP MRP 模块；B产品 BOM 2 层，Excel 可管理"
+  
+  Capability:
+    strategic_view: "定制化交付能力是核心竞争壁垒，竞争对手复制需 3-5 年"
+    operational_view: "定制化交付依赖跨部门协作矩阵，平均交付周期 45 天"
+    technical_view: "定制化交付数据流：CRM商机→PLM方案→ERP排产→MES执行→WMS发货"

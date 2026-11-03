@@ -1,0 +1,33 @@
+# Semantic Alignment Interview Template
+# Target Layer: L4
+# Output: SemanticDefinition (with confusable_with)
+
+interview:
+  type: "semantic-alignment"
+  name_zh: "语义对齐访谈"
+  target_layer: "L4"
+  duration_minutes: 45
+  interviewee_profile: "Cross-department representatives, system administrators"
+  output_entry_type: "SemanticDefinition"
+
+  core_questions:
+    1: "What does '{term}' mean in your department? Can you define it precisely?"
+    2: "Is your definition the same as other departments use? Where do they differ?"
+    3: "What terms are most easily confused with '{term}'? What's the distinction?"
+    4: "Which IT system(s) store data about '{term}'? What field name does each system use?"
+    5: "When two systems disagree about '{term}' (e.g., CRM says active, Finance says overdue), which is authoritative?"
+    6: "Has the meaning of '{term}' changed over time? When and why?"
+    7: "Are there any business rules associated with '{term}' (e.g., thresholds, formulas)?"
+    8: "What would happen if we used the wrong definition in a critical decision?"
+    9: "Who has authority to change the official definition of '{term}'?"
+    10: "Are there any abbreviations, aliases, or slang terms for '{term}' in daily use?"
+
+  follow_up_prompts:
+    - "Can you show me how this term appears in your system?"
+    - "What's the most common misunderstanding about this term?"
+    - "Has a miscommunication about this term ever caused a problem?"
+
+  extraction_rules:
+    required_fields: ["canonical_definition", "synonyms", "system_mappings", "confusable_with"]
+    conflict_rules_required: true  # Must define resolution when systems disagree
+    business_rules_capture: true  # Capture associated pricing/discount/credit/service rules

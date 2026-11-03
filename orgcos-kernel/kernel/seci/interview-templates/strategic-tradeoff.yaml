@@ -1,0 +1,33 @@
+# Strategic Tradeoff Interview Template
+# Target Layer: L2
+# Output: StrategicStatement entries (tradeoff type)
+
+interview:
+  type: "strategic-tradeoff"
+  name_zh: "战略取舍访谈"
+  target_layer: "L2"
+  duration_minutes: 90
+  interviewee_profile: "C-suite, VP-level, strategy office"
+  output_entry_type: "StrategicStatement"
+
+  core_questions:
+    1: "What customers do we choose NOT to serve? What is the revenue threshold?"
+    2: "Under what conditions would we rather lose a deal than lower our price?"
+    3: "What was the most important strategic decision in the past year? What did we give up?"
+    4: "When a customer requests custom development that conflicts with our product roadmap, what do we do?"
+    5: "If a competitor undercuts us by 30% on price, how do we respond?"
+    6: "What markets or industries have we explicitly decided to avoid? Why?"
+    7: "When two strategic goals conflict (e.g., growth vs. profitability), how do we prioritize?"
+    8: "What capabilities do we deliberately NOT build in-house, preferring partners?"
+    9: "Can you describe a time we walked away from a large deal? What was the reasoning?"
+    10: "What would constitute a 'bet the company' decision for us? What safeguards exist?"
+
+  follow_up_prompts:
+    - "Can you give a specific example?"
+    - "What would happen if we did the opposite?"
+    - "How is this communicated to frontline employees?"
+    - "Has this ever been violated? What happened?"
+
+  extraction_rules:
+    decision_rule_format: "IF {condition} THEN {action}, NOT {avoided_action}"
+    required_fields: ["dimension", "we_choose", "we_deliberately_avoid", "decision_rule"]

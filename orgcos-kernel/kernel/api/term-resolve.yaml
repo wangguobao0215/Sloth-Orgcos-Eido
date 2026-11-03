@@ -1,0 +1,52 @@
+# Term Resolve API Endpoint
+# GET /api/v1/semantics/resolve
+
+paths:
+  /semantics/resolve:
+    get:
+      summary: "Term Resolve - standard definition + cross-system mapping"
+      description: "Resolve a business term to its canonical definition, synonyms, and system-specific mappings"
+      operationId: "termResolve"
+      parameters:
+        - name: term
+          in: query
+          required: true
+          schema: {type: string}
+          description: "Business term to resolve"
+        - name: system_context
+          in: query
+          schema: {type: string}
+          description: "Optional: resolve in context of a specific system (CRM, ERP, Finance)"
+      responses:
+        "200":
+          description: "Term resolution result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  canonical_term: {type: string}
+                  canonical_definition: {type: string}
+                  synonyms: {type: array, items: {type: string}}
+                  system_mappings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        system: {type: string}
+                        field_name: {type: string}
+                        value_mapping: {type: object}
+                  confusable_with:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        term: {type: string}
+                        distinction: {type: string}
+                  conflict_rules:
+                    type: array
+                    items: {type: object}
+                  governance:
+                    $ref: "../api/openapi.yaml#/components/schemas/GovernanceMetadata"
+        "404":
+          description: "Term not found in L4 glossary"

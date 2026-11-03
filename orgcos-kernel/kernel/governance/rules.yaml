@@ -1,0 +1,133 @@
+# OrgCOS T1 治理规则定义
+# E2: Governance Engine — 5 条自动治理规则
+# 规则参数可通过 T2 蓝图的 governance.override 调整，但 G1-G5 本身不可删除
+
+version: "1.0.0"
+last_updated: "2026-11-03"
+
+rules:
+  - id: G1
+    name: 过期降权
+    name_en: Expiration Decay
+    description: 当 Context Entry 超过 valid_until 且未续期时，自动降低 confidence
+    trigger: "NOW > valid_until AND NOT renewed"
+    needs_llm: false
+    implementation: python_time_calc
+    params:
+      decay_rate:
+        type: float
+        default: 0.1
+        min: 0.01
+        max: 0.5
+        description: 每月衰减量
+      min_confidence:
+        type: float
+        default: 0.1
+        min: 0.0
+        max: 0.3
+        description: 最低可信度下限
+    actions:
+      - "confidence = max(confidence - (months_expired * decay_rate), min_confidence)"
+      - 'append_warning: "此信息已过期（{months}个月），可信度已降至 {confidence}"'
+    auto_trigger: true
+
+  - id: G2
+    name: 挑战预警
+    name_en: Challenge Alert
+    description: 当条目被多次质疑但未修改时，自动创建审查任务
+    trigger: "challenge_count >= challenge_threshold AND NOT modified_after(last_challenged)"
+    needs_llm: false
+    implementation: python_counter
+    params:
+      challenge_threshold:
+        type: integer
+        default: 3
+        min: 1
+        max: 10
+        description: 触发预警的质疑次数阈值
+    actions:
+      - create_review_task:
+          assignee: "${owner}"
+          message: "条目 {entry_id} 已被挑战 {challenge_count} 次但未修改，请确认或修订"
+          priority: high
+          sla_days: 7
+    auto_trigger: true
+
+  - id: G3
+    name: 冲突检测
+    name_en: Conflict Detection
+    description: 新 Entry 入库时，与同域已有 Entry 进行语义比对，检测矛盾
+    trigger: "on_entry_ingest AND same_domain_entry_exists"
+    needs_llm: true
+    implementation: llm_semantic_compare
+    params:
+      default_resolution:
+        type: string
+        default: "layer_priority"
+        description: 默认仲裁策略
+    resolution_hierarchy:
+      cross_layer: "L2 > L3 > L1 > L4 > L5 > L6"
+      same_layer: "higher_confidence > newer_version"
+      unresolvable: "escalate_to_governance_committee(sla_days=7)"
+    actions:
+      - if_has_rule: "apply_resolution_rule()"
+      - if_no_rule: 'mark_as: conflict_pending; escalate_to: governance_committee'
+    auto_trigger: true
+    llm_prompt: |
+      给定两条 Context Entry，判断它们对同一场景是否给出矛盾的指导意见。
+      - Entry A: {entry_a_content}
+      - Entry B: {entry_b_content}
+      判断：是否矛盾？矛盾程度（高/中/低）？建议仲裁方式？
+
+  - id: G4
+    name: 覆盖率审计
+    name_en: Coverage Audit
+    description: 定期扫描各层各域的 Context Entry 覆盖率，生成缺口报告
+    trigger: "periodic(quarterly) OR manual"
+    needs_llm: partial
+    implementation: python_statistics + llm_prioritization
+    params:
+      audit_frequency:
+        type: string
+        default: quarterly
+        enum: [monthly, quarterly, semi_annual, annual]
+      coverage_targets:
+        type: object
+        default:
+          L1: 0.80
+          L2: 0.60
+          L3: 0.70
+          L4: 0.60
+          L5: 0.40
+          L6: 0.50
+    actions:
+      - "scan_all_layers_and_domains()"
+      - "calculate_coverage(): per_layer + per_domain"
+      - "generate_gap_report(sorted_by: P0 > P1 > P2)"
+    auto_trigger: false
+
+  - id: G5
+    name: 一致性校验
+    name_en: Consistency Check
+    description: 检查 L3 运作流程是否可追溯到 L2 战略规则
+    trigger: "on_entry_ingest(L3) OR periodic"
+    needs_llm: true
+    implementation: llm_traceability_check
+    params:
+      traceability_required:
+        type: object
+        default:
+          L3_to_L2: mandatory
+          L5_to_L3: recommended
+          L6_to_L5: optional
+    actions:
+      - "for each L3_entry: check_traceability_to_L2()"
+      - "if not_traceable: mark_as pending_alignment"
+      - "for each cross_layer_reference: verify_reference_valid()"
+      - "if invalid: mark_as broken_reference"
+    auto_trigger: true
+    llm_prompt: |
+      判断以下 L3 运作流程是否可以追溯到某条 L2 战略决策。
+      - L3 流程: {l3_entry_content}
+      - 候选 L2 战略: {l2_entries_content}
+      判断：是否可追溯？追溯到哪条 L2？追溯强度（强/中/弱）？

@@ -1,0 +1,33 @@
+# Failure Retrospective Interview Template
+# Target Layer: L5
+# Output: MemoryEntry (failure type)
+
+interview:
+  type: "failure-retrospective"
+  name_zh: "失败复盘访谈"
+  target_layer: "L5"
+  duration_minutes: 90
+  interviewee_profile: "Project leads, decision makers involved in the failure"
+  output_entry_type: "MemoryEntry"
+
+  core_questions:
+    1: "What happened? Walk me through the timeline."
+    2: "What was the root cause? (Ask 'why' 5 times)"
+    3: "What early warning signals were ignored or missed?"
+    4: "At what point could we have changed course?"
+    5: "What was the decision-making process at the critical moment?"
+    6: "What information did we have that we didn't use?"
+    7: "What external factors contributed? Were they foreseeable?"
+    8: "How did we discover the failure? Who raised the alarm?"
+    9: "What would you do differently if faced with the same situation?"
+    10: "What systemic changes have been made to prevent recurrence?"
+
+  follow_up_prompts:
+    - "Was there a moment when someone knew but didn't speak up?"
+    - "What assumptions did we make that turned out wrong?"
+    - "Did our culture/character contribute to this failure?"
+
+  extraction_rules:
+    required_fields: ["context", "decision", "outcome", "root_causes", "early_warnings", "prevention_rules", "lessons"]
+    link_to_strategy: "Must reference related L2 strategic rule if applicable"
+    evidence_strength: "single_case by default, upgrade to multi_case when pattern repeats"

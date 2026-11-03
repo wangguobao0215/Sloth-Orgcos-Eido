@@ -1,0 +1,71 @@
+# OrgCOS T1 通用关系定义
+# E1: Entity-Relation Standard — 7 类通用关系
+# 所有行业蓝图和企业实例在此基础上扩展
+
+version: "1.0.0"
+last_updated: "2026-11-03"
+
+relations:
+  - type: BELONGS_TO
+    label: 归属
+    description: 实体归属于某组织单元
+    direction: outbound
+    source_types: [Person, Role, Product, Capability]
+    target_types: [OrgUnit]
+    cardinality: "N:1"
+    optional: false
+
+  - type: REPORTS_TO
+    label: 汇报
+    description: 汇报关系
+    direction: outbound
+    source_types: [Person, Role]
+    target_types: [Person, Role]
+    cardinality: "N:1"
+    optional: false
+
+  - type: HAS_ROLE
+    label: 担任角色
+    description: 人员担任某角色
+    direction: outbound
+    source_types: [Person]
+    target_types: [Role]
+    cardinality: "N:M"
+    optional: false
+
+  - type: COMPETES_WITH
+    label: 竞争
+    description: 企业间竞争关系
+    direction: bidirectional
+    source_types: [Enterprise]
+    target_types: [Enterprise]
+    cardinality: "N:M"
+    optional: true
+
+  - type: SUPPLIES
+    label: 供应
+    description: 供应关系
+    direction: outbound
+    source_types: [Enterprise, Partner]
+    target_types: [Enterprise]
+    cardinality: "N:M"
+    optional: true
+
+  - type: OPERATES_IN
+    label: 市场参与
+    description: 企业参与某市场
+    direction: outbound
+    source_types: [Enterprise]
+    target_types: [Market]
+    cardinality: "N:M"
+    optional: true
+
+  - type: INFLUENCES
+    label: 影响
+    description: 泛化影响关系
+    direction: outbound
+    source_types: [Entity]
+    target_types: [Entity]
+    cardinality: "N:M"
+    optional: true
+    note: Entity 是泛化类型，可匹配任何实体

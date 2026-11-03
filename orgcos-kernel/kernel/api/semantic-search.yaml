@@ -1,0 +1,68 @@
+# Semantic Search API Endpoint
+# POST /api/v1/memory/search
+
+paths:
+  /memory/search:
+    post:
+      summary: "Semantic Search - L5 cases + L6 character"
+      description: "Search organizational memory using semantic similarity across L5 cases and L6 character traits"
+      operationId: "semanticSearch"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: "Natural language search query"
+                top_k:
+                  type: integer
+                  default: 5
+                  minimum: 1
+                  maximum: 50
+                memory_types:
+                  type: array
+                  items:
+                    type: string
+                    enum: [case, success, failure, inflection, practice, antipattern]
+                min_confidence:
+                  type: number
+                  default: 0.5
+                include_character:
+                  type: boolean
+                  default: true
+                layer_filter:
+                  type: array
+                  items:
+                    type: string
+                    enum: [L5, L6]
+      responses:
+        "200":
+          description: "Search results"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entry_id: {type: string}
+                        layer: {type: string}
+                        type: {type: string}
+                        title: {type: string}
+                        summary: {type: string}
+                        relevance_score: {type: number}
+                        governance:
+                          $ref: "../api/openapi.yaml#/components/schemas/GovernanceMetadata"
+                  metadata:
+                    type: object
+                    properties:
+                      total_results: {type: integer}
+                      search_time_ms: {type: number}
+                      vector_index_version: {type: string}

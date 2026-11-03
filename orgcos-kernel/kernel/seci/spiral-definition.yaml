@@ -1,0 +1,57 @@
+# OrgCOS SECI Spiral Definition
+# Source: T1 Kernel Design v1.0, Section 5.3
+
+spiral:
+  name: "Quarterly Knowledge Spiral"
+  duration_weeks: 8
+  frequency: "quarterly"
+  target_output: 30-50  # Context Entries per spiral
+
+  phases:
+    - id: "S"
+      name: "Socialization"
+      name_zh: "社会化"
+      weeks: [1, 2]
+      mode: "tacit_to_tacit"
+      goal: "Observation, imitation, and tacit knowledge sharing"
+      entry_target: 0  # S-phase produces discoveries, not entries
+
+    - id: "E"
+      name: "Externalization"
+      name_zh: "外显化"
+      weeks: [3, 4]
+      mode: "tacit_to_explicit"
+      goal: "Convert tacit knowledge to structured Context Entries via interviews and workshops"
+      entry_target: 15-25
+
+    - id: "C"
+      name: "Combination"
+      name_zh: "组合化"
+      weeks: [5, 6]
+      mode: "explicit_to_explicit"
+      goal: "Integrate scattered explicit knowledge, create relationships, validate strategic alignment"
+      entry_target: 10-20
+
+    - id: "I"
+      name: "Internalization"
+      name_zh: "内隐化"
+      weeks: [7, 8]
+      mode: "explicit_to_tacit"
+      goal: "Convert explicit knowledge into AI-consumable formats (few-shot, prompts, vector indexes)"
+      entry_target: 5-10
+
+  completion_criteria:
+    all_phases_completed: true  # No skipping
+    interview_types_covered: 5  # All 5 interview types must complete >= 1 round
+    minimum_entries: 30
+    entry_distribution:
+      L2: ">= 3"
+      L3: ">= 5"
+      L4: ">= 3"
+      L5: ">= 10"
+      L6: ">= 5"
+
+  state_persistence:
+    checkpoint_after_each_phase: true
+    resume_support: true  # Breakpoint resume across weeks
+    state_file: "spiral-state.json"

@@ -1,0 +1,36 @@
+openapi: "3.0.3"
+info:
+  title: "OrgCOS AI Consumption API"
+  version: "1.0.0"
+  description: "Standard API gateway for AI systems to consume OrgCOS organizational context"
+  contact:
+    name: "OrgCOS Team"
+servers:
+  - url: "https://{enterprise}.orgcos.dev/api/v1"
+    description: "Enterprise-specific OrgCOS instance"
+paths:
+  /graph/query:
+    $ref: "./graph-query.yaml#/paths/~1graph~1query"
+  /semantics/resolve:
+    $ref: "./term-resolve.yaml#/paths/~1semantics~1resolve"
+  /memory/search:
+    $ref: "./semantic-search.yaml#/paths/~1memory~1search"
+  /context/assemble:
+    $ref: "./context-assemble.yaml#/paths/~1context~1assemble"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    GovernanceMetadata:
+      type: object
+      properties:
+        owner: {type: string}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        valid_from: {type: string, format: date}
+        valid_until: {type: string}
+        version: {type: string, pattern: "^\\d+\\.\\d+\\.\\d+$"}
+security:
+  - bearerAuth: []

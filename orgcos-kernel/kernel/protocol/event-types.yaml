@@ -1,0 +1,78 @@
+# OrgCOS Cross-Layer Event Types
+# Source: T1 Kernel Design v1.0, Section 6.1
+
+event_types:
+  - id: "STRATEGY_CHANGE"
+    source_layer: "L2"
+    target_layers: ["L3", "L5"]
+    priority: "high"
+    sla_days: 7
+    propagation_action:
+      L3: "Review affected processes and decision authority matrices"
+      L5: "Mark affected cases and check if lessons still apply"
+    description: "Triggered when a strategic trade-off rule is added, modified, or retired"
+
+  - id: "ORG_RESTRUCTURE"
+    source_layer: "L3"
+    target_layers: ["L1", "L2"]
+    priority: "high"
+    sla_days: 3
+    propagation_action:
+      L1: "Update org chart nodes, reporting lines, and department hierarchy"
+      L2: "Review strategic responsibility attribution and decision authority ownership"
+    description: "Triggered when organizational structure changes (new dept, merge, split, dissolve)"
+
+  - id: "SYSTEM_ONBOARD"
+    source_layer: "L4"
+    target_layers: ["L1"]
+    priority: "medium"
+    sla_days: 14
+    propagation_action:
+      L1: "Supplement system_ref attributes for entities that exist in the new system"
+    description: "Triggered when a new IT system is integrated into the enterprise"
+
+  - id: "TERM_CHANGE"
+    source_layer: "L4"
+    target_layers: ["L1", "L2", "L3"]
+    priority: "medium"
+    sla_days: 14
+    propagation_action:
+      all: "All entries referencing the changed term trigger review"
+    description: "Triggered when a business term definition is modified"
+
+  - id: "CASE_ADDED"
+    source_layer: "L5"
+    target_layers: ["L2", "L6"]
+    priority: "low"
+    sla_days: 30
+    propagation_action:
+      L2: "Check if case validates or contradicts strategic rules"
+      L6: "Check if case reflects character bias or evolution"
+    description: "Triggered when a new case is added to the memory layer"
+
+  - id: "CULTURE_SURVEY"
+    source_layer: "L6"
+    target_layers: ["L1", "L2", "L3", "L4", "L5"]
+    priority: "low"
+    sla_days: 30
+    propagation_action:
+      all: "Update style parameters and prompt templates across all layers"
+    description: "Triggered when a culture survey or character audit is completed"
+
+  - id: "ENTRY_EXPIRED"
+    source_layer: "any"
+    target_layers: ["referencing_parties"]
+    priority: "high"
+    sla_days: 0  # Real-time
+    propagation_action:
+      all: "Notify all downstream consumers referencing this entry; apply confidence decay"
+    description: "Triggered when any Context Entry passes its valid_until date"
+
+  - id: "CONFLICT_DETECTED"
+    source_layer: "any"
+    target_layers: ["governance"]
+    priority: "high"
+    sla_days: 0  # Real-time
+    propagation_action:
+      governance: "Create governance review task with full conflict context"
+    description: "Triggered when G3 detects contradictory guidance from two Context Entries"

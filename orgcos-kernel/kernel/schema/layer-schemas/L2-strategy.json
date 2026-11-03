@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L2 Strategy Layer - Content Schema",
+  "description": "Defines content field constraints for L2 StrategicStatement entries",
+  "type": "object",
+  "required": [
+    "statement_type",
+    "content",
+    "decision_rule"
+  ],
+  "properties": {
+    "statement_type": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "tradeoff",
+        "positioning",
+        "target"
+      ]
+    },
+    "content": {
+      "type": "string",
+      "description": "Natural language description of the strategic statement"
+    },
+    "decision_rule": {
+      "type": "string",
+      "description": "AI-referenceable decision rule in IF-THEN format"
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "customer_targeting",
+        "product_strategy",
+        "competition_strategy",
+        "market_selection",
+        "growth_model"
+      ],
+      "description": "Trade-off dimension (applicable when statement_type=tradeoff)"
+    },
+    "we_choose": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "we_deliberately_avoid": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "priority": {
+      "type": "integer",
+      "description": "Priority ranking when trade-off rules conflict (1=highest)"
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "ID of the entry this one replaces"
+    },
+    "related_entries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_trigger": {
+      "type": "string",
+      "description": "Event or condition that triggers review of this statement"
+    },
+    "negative_cases": {
+      "type": "array",
+      "description": "Cases where violating this rule led to negative outcomes (Nonaka)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "consequence": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "role_perspectives": {
+      "type": "object",
+      "description": "P3: What this statement means for different roles",
+      "properties": {
+        "ceo": {
+          "type": "string"
+        },
+        "dept_manager": {
+          "type": "string"
+        },
+        "frontline": {
+          "type": "string"
+        },
+        "ai_agent": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

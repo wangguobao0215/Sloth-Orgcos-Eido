@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L4 Semantics Layer - Content Schema",
+  "description": "Defines content field constraints for L4 SemanticDefinition entries",
+  "type": "object",
+  "required": [
+    "sem_type",
+    "canonical_definition"
+  ],
+  "properties": {
+    "sem_type": {
+      "type": "string",
+      "enum": [
+        "term",
+        "mapping",
+        "rule",
+        "business_rule"
+      ]
+    },
+    "canonical_definition": {
+      "type": "string"
+    },
+    "synonyms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "system_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "system",
+          "field_name"
+        ],
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Source system name (CRM, ERP, Finance, etc.)"
+          },
+          "field_name": {
+            "type": "string"
+          },
+          "value_mapping": {
+            "type": "object"
+          },
+          "data_type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "conflict_rules": {
+      "type": "array",
+      "description": "Rules for when systems disagree on term meaning or value",
+      "items": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string",
+            "description": "e.g. CRM.active + Finance.overdue"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How to resolve the conflict"
+          },
+          "ai_flag": {
+            "type": "string",
+            "description": "Warning message for AI consumption"
+          }
+        }
+      }
+    },
+    "confusable_with": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "distinction": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "business_rules": {
+      "type": "array",
+      "description": "Formal business rules associated with this term",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "enum": [
+              "pricing",
+              "discount",
+              "credit",
+              "service"
+            ]
+          },
+          "formal_expression": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "approval_workflow": {
+      "type": "object",
+      "description": "Term change approval workflow (Zachman recommendation)",
+      "properties": {
+        "requires_approval": {
+          "type": "boolean"
+        },
+        "approver": {
+          "type": "string"
+        },
+        "review_cycle": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

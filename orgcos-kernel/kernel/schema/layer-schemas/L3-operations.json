@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L3 Operations Layer - Content Schema",
+  "description": "Defines content field constraints for L3 OperationalDefinition entries",
+  "type": "object",
+  "required": [
+    "op_type",
+    "content"
+  ],
+  "properties": {
+    "op_type": {
+      "type": "string",
+      "enum": [
+        "org_chart",
+        "process",
+        "authority",
+        "policy",
+        "performance",
+        "collaboration",
+        "power_structure"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "official_flow": {
+      "type": "object",
+      "description": "Standard SOP as documented",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sla_days": {
+          "type": "number"
+        },
+        "responsible_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "actual_flow": {
+      "type": "object",
+      "description": "Process as actually executed (collected via anonymous interviews)",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actual_sla_days": {
+          "type": "number"
+        },
+        "deviation_reason": {
+          "type": "string"
+        },
+        "collection_method": {
+          "type": "string",
+          "enum": [
+            "anonymous_interview",
+            "behavioral_log",
+            "observation"
+          ]
+        }
+      }
+    },
+    "deviation_severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "deviation_type": {
+      "type": "string",
+      "enum": [
+        "shortcut",
+        "workaround",
+        "informal_approval",
+        "parallel_process",
+        "skip_step"
+      ]
+    },
+    "last_reviewed": {
+      "type": "string",
+      "format": "date"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "current",
+        "deviation_acknowledged",
+        "needs_update",
+        "under_review"
+      ]
+    },
+    "decision_auth_matrix": {
+      "type": "object",
+      "description": "Decision authority matrix for this process",
+      "properties": {
+        "decision_type": {
+          "type": "string"
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role_level": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "string"
+              },
+              "escalation_path": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "traceable_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "L2 StrategicStatement IDs this process traces to (P2 traceability)"
+    }
+  },
+  "additionalProperties": false
+}

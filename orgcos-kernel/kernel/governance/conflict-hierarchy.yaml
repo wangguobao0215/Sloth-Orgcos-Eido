@@ -1,0 +1,44 @@
+# OrgCOS Conflict Resolution Hierarchy
+# Source: T1 Kernel Design v1.0, Section 4.2
+
+conflict_resolution:
+  default_strategy: "layer_priority"
+
+  # Layer priority order (higher priority wins)
+  layer_priority:
+    order: ["L2", "L3", "L1", "L4", "L5", "L6"]
+    # Rationale: Strategic tradeoffs > Operations > Ontology > Semantics > Memory > Character
+
+  # Same-layer conflict resolution
+  same_layer_strategy: "confidence_then_recency"
+  # Step 1: Compare confidence (higher wins)
+  # Step 2: If equal confidence, compare version (newer wins)
+  # Step 3: If same version, compare evidence_count (more evidence wins)
+
+  # Cross-reference conflict
+  cross_reference_strategy: "explicit_over_implicit"
+  # Explicit decision rules take priority over inferred patterns
+
+  # Escalation when no rule applies
+  escalation:
+    when: "no_applicable_rule"
+    action: "create_governance_review_task"
+    assignee: "governance_committee"
+    sla_days: 7
+    priority: "high"
+    notification_channels:
+      - "owner_email"
+      - "governance_dashboard"
+
+  # Special cases
+  special_cases:
+    # When L5 case contradicts L2 rule, flag for strategy review
+    L5_contradicts_L2:
+      action: "flag_for_strategy_review"
+      description: "Multiple cases showing strategy rule violation with better outcomes"
+
+    # When L6 in-use contradicts L6 espoused
+    espoused_vs_in_use:
+      action: "follow_in_use"
+      description: "AI follows theory-in-use, not espoused theory"
+      backstop: "attach_risk_backstop_when_following_in_use"

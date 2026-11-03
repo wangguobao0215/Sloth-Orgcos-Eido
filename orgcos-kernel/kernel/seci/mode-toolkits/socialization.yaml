@@ -1,0 +1,32 @@
+# SECI S-Phase: Socialization Toolkit
+# Weeks 1-2: Tacit to Tacit
+
+toolkit:
+  phase: "S"
+  name: "Socialization"
+  tools:
+    - id: "collab_log_analyzer"
+      name: "Collaboration Log Analyzer"
+      name_zh: "协作日志分析器"
+      input: ["email_logs", "im_records", "meeting_minutes", "calendar_data"]
+      output: ["social_network_graph", "interaction_frequency_matrix", "tacit_relationship_discoveries"]
+      method: "Parse communication metadata to identify collaboration patterns and hidden relationships"
+
+    - id: "behavior_pattern_recognizer"
+      name: "Behavior Pattern Recognizer"
+      name_zh: "行为模式识别器"
+      input: ["approval_flows", "meeting_records", "decision_logs"]
+      output: ["behavior_pattern_labels", "decision_style_profiles", "informal_influence_map"]
+      method: "Analyze behavioral data to identify recurring decision patterns and informal power structures"
+
+    - id: "ona_questionnaire"
+      name: "Organizational Network Analysis Questionnaire"
+      name_zh: "组织网络分析问卷"
+      input: ["anonymous_survey_responses"]
+      output: ["social_network_graph", "centrality_scores", "bridge_identification", "tacit_knowledge_holders"]
+      method: "Standardized ONA questionnaire (12 questions) distributed anonymously to map informal networks"
+      questionnaire_sections:
+        - "Who do you go to for advice on difficult problems?"
+        - "Who do you trust with sensitive information?"
+        - "Who influences your thinking about strategy?"
+        - "Who helps you get things done quickly?"

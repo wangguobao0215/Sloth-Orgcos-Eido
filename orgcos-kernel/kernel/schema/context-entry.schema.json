@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://orgcos.dev/schema/context-entry/v1.0.0",
+  "title": "OrgCOS Context Entry",
+  "description": "OrgCOS 上下文条目通用结构 — T1 内核强制约束",
+  "type": "object",
+  "required": ["entry_id", "layer", "type", "domain", "content", "governance"],
+  "additionalProperties": false,
+  "properties": {
+    "entry_id": {
+      "type": "string",
+      "pattern": "^ctx-L[1-6]-[a-z][a-z0-9_-]*-[0-9]{3,}$",
+      "description": "全局唯一标识，格式: ctx-{layer}-{domain}-{seq}"
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["L1", "L2", "L3", "L4", "L5", "L6"],
+      "description": "所属层级"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["entity", "relation", "process", "term", "case", "trait", "rule", "decision"],
+      "description": "条目类型"
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "description": "业务域标识"
+    },
+    "content": {
+      "type": "object",
+      "description": "层级特定的内容载荷（由各层 Schema 进一步约束）"
+    },
+    "governance": {
+      "$ref": "governance-meta.schema.json",
+      "description": "12 字段治理元数据"
+    }
+  }
+}

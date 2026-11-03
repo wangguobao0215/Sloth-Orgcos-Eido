@@ -1,0 +1,45 @@
+# OrgCOS Cross-Layer Consistency Rules
+# Source: T1 Kernel Design v1.0, Section 6.3
+
+consistency_rules:
+  - id: "CR-01"
+    name: "L3-to-L2 Traceability"
+    name_zh: "L3-L2 战略追溯"
+    check_logic: "Every L3 OperationalDefinition must reference at least 1 L2 StrategicStatement via traceable_to field"
+    failure_action: "Mark entry as pending_alignment; generate traceability task for owner"
+    severity: "error"
+    automation_level: "semi_auto"  # AI suggests links, human confirms
+    frequency: "on_entry_ingest + quarterly_audit"
+
+  - id: "CR-02"
+    name: "L5-to-L2 Validation"
+    name_zh: "L5-L2 案例验证"
+    check_logic: "L5 MemoryEntry's related_strategy_rule must reference an existing, valid L2 StrategicStatement"
+    failure_action: "Mark as orphan_reference; trigger L2 review"
+    severity: "warning"
+    automation_level: "fully_auto"
+    frequency: "on_entry_ingest"
+
+  - id: "CR-03"
+    name: "L1 Reference Integrity"
+    name_zh: "L1 引用完整性"
+    check_logic: "Entity IDs referenced in L2/L3/L5 entries must exist in L1 ontology graph"
+    failure_action: "Mark as broken_reference; BLOCK ingestion until resolved"
+    severity: "error"
+    automation_level: "fully_auto"
+    frequency: "pre_ingestion_check"
+
+  - id: "CR-04"
+    name: "L4 Term Coverage"
+    name_zh: "L4 术语覆盖"
+    check_logic: "L1 entity names and L3 process terms must have corresponding definitions in L4 terminology"
+    failure_action: "Mark as undefined_term; generate term supplement task"
+    severity: "warning"
+    automation_level: "semi_auto"
+    frequency: "quarterly_audit"
+
+  # Thresholds
+  thresholds:
+    traceability_coverage_minimum: 0.80  # 80% of L3 entries must trace to L2
+    term_coverage_minimum: 0.60  # 60% of terms must have L4 definitions
+    reference_integrity: 1.00  # 100% -- no broken references allowed

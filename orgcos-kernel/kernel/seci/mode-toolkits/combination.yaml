@@ -1,0 +1,28 @@
+# SECI C-Phase: Combination Toolkit
+# Weeks 5-6: Explicit to Explicit
+
+toolkit:
+  phase: "C"
+  name: "Combination"
+  tools:
+    - id: "knowledge_graph_auto_integrator"
+      name: "Knowledge Graph Auto-Integrator"
+      name_zh: "知识图谱自动整合器"
+      input: ["scattered_explicit_entries"]
+      output: ["integrated_context_entries", "relationship_links", "deduplication_report"]
+      method: "Auto-detect and merge duplicate or overlapping Context Entries, suggest relationship links"
+
+    - id: "tag_relation_auto_suggester"
+      name: "Tag and Relation Auto-Suggester"
+      name_zh: "标签关系自动建议器"
+      input: ["context_entries_without_relations"]
+      output: ["suggested_tags", "suggested_relations", "confidence_scores"]
+      method: "LLM-based analysis to suggest meaningful tags and relationships between entries"
+
+    - id: "L2_strategy_alignment_validator"
+      name: "L2 Strategy Alignment Validator"
+      name_zh: "L2 战略对齐校验器"
+      input: ["new_context_entries", "L2_strategic_statements"]
+      output: ["alignment_report", "pending_alignment_list", "traceability_links"]
+      method: "Validate that new entries (especially L3/L5) are traceable to L2 strategic rules. Untraceable items marked as pending_alignment."
+      mandatory_for: ["L3", "L5"]

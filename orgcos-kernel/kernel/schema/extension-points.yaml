@@ -1,0 +1,47 @@
+# OrgCOS Extension Points
+# Source: T1 Kernel Design v1.0, Section 8
+
+extension_points:
+  - id: "EP-01"
+    type: "schema.extend.entity"
+    name: "Entity Type Extension"
+    name_zh: "实体类型扩展"
+    mechanism: "Add industry-specific entity types on top of the 10 standard types"
+    constraint: "Must inherit standard governance metadata; CANNOT modify standard entity attributes"
+    example:
+      manufacturing: ["WorkOrder", "BOM", "ProcessRoute"]
+      financial: ["Position", "Exposure", "Portfolio"]
+
+  - id: "EP-02"
+    type: "schema.extend.attribute"
+    name: "Attribute Extension"
+    name_zh: "属性扩展"
+    mechanism: "Add industry/enterprise-specific attributes to standard entity types"
+    constraint: "New attributes must be labeled required|optional; CANNOT override standard attributes"
+    example:
+      manufacturing_customer: "production_capacity"
+      strategic_customer: "key_relationship_map"
+
+  - id: "EP-03"
+    type: "governance.override"
+    name: "Rule Override"
+    name_zh: "治理规则覆写"
+    mechanism: "Override governance engine default parameters"
+    constraint: "CANNOT disable core rules (G1-G5); can only adjust parameter values"
+    example:
+      - {rule: "expiration_decay", param: "decay_rate", from: 0.1, to: 0.08}
+      - {rule: "challenge_alert", param: "challenge_threshold", from: 3, to: 5}
+
+  - id: "EP-04"
+    type: "api.extend"
+    name: "API Extension"
+    name_zh: "API 扩展"
+    mechanism: "Add industry-specific endpoints on top of standard APIs"
+    constraint: "Must use standard auth; endpoint naming follows /ext/{domain}/ prefix"
+    example:
+      manufacturing:
+        - "/ext/manufacturing/bom-check"
+        - "/ext/manufacturing/capacity-check"
+      financial:
+        - "/ext/financial/exposure-calc"
+        - "/ext/financial/compliance-check"

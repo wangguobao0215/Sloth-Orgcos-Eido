@@ -1,0 +1,34 @@
+# SECI I-Phase: Internalization Toolkit
+# Weeks 7-8: Explicit to Tacit (AI Internalization)
+
+toolkit:
+  phase: "I"
+  name: "Internalization"
+  tools:
+    - id: "few_shot_example_generator"
+      name: "Few-Shot Example Generator"
+      name_zh: "Few-Shot 示例生成器"
+      input: ["structured_context_entries"]
+      output: ["few_shot_library.json"]
+      method: "Convert high-confidence Context Entries into few-shot examples suitable for AI prompt injection"
+      selection_criteria:
+        min_confidence: 0.8
+        min_evidence_count: 3
+        prefer_types: ["case", "success", "failure"]
+
+    - id: "prompt_template_compiler"
+      name: "Prompt Template Compiler"
+      name_zh: "Prompt 模板编译器"
+      input: ["L6_character_entries", "L2_strategic_statements"]
+      output: ["system_prompt_templates/", "behavioral_rules.yaml"]
+      method: "Compile L6 personality traits and L2 strategic rules into injectable system prompt fragments"
+
+    - id: "rag_index_rebuilder"
+      name: "RAG Index Rebuilder"
+      name_zh: "RAG 索引重建器"
+      input: ["all_context_entries"]
+      output: ["vector_index/", "embedding_metadata.json"]
+      method: "Rebuild vector database indexes with new Context Entries from this spiral round"
+      vector_db: "Milvus 2.x"
+      embedding_model: "text-embedding-3-large"
+      index_dimensions: 3072

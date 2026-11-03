@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L6 Character Layer - Content Schema",
+  "description": "Defines content field constraints for L6 CharacterEntry entries",
+  "type": "object",
+  "required": [
+    "char_type",
+    "content",
+    "behavioral_implication"
+  ],
+  "properties": {
+    "char_type": {
+      "type": "string",
+      "enum": [
+        "trait",
+        "espoused",
+        "in_use",
+        "norm"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "behavioral_implication": {
+      "type": "string",
+      "description": "How this trait affects AI behavior"
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "risk_appetite",
+        "decision_speed",
+        "innovation_attitude",
+        "customer_orientation",
+        "internal_communication",
+        "self_criticism"
+      ],
+      "description": "One of the 6 character profile dimensions"
+    },
+    "spectrum_position": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Position on the dimension spectrum (0=left pole, 100=right pole)"
+    },
+    "spectrum_label": {
+      "type": "string",
+      "description": "Human-readable position description"
+    },
+    "espoused_description": {
+      "type": "string",
+      "description": "What the organization says (official)"
+    },
+    "in_use_description": {
+      "type": "string",
+      "description": "What the organization actually does (observed)"
+    },
+    "espoused_vs_in_use_gap": {
+      "type": "object",
+      "properties": {
+        "gap_severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "minor",
+            "significant",
+            "critical"
+          ]
+        },
+        "ai_should_follow": {
+          "type": "string",
+          "enum": [
+            "espoused",
+            "in_use",
+            "mixed"
+          ],
+          "description": "When espoused and in-use conflict, AI follows in-use"
+        },
+        "backstop_strategy": {
+          "type": "string",
+          "description": "Risk mitigation when following in-use behavior"
+        }
+      }
+    },
+    "prompt_template": {
+      "type": "string",
+      "description": "Ready-to-inject system prompt fragment"
+    },
+    "acquisition_method": {
+      "type": "string",
+      "enum": [
+        "culture_survey",
+        "executive_interview",
+        "behavioral_data_analysis",
+        "failure_case_review"
+      ],
+      "description": "How this trait was identified"
+    },
+    "evolution_log": {
+      "type": "array",
+      "description": "How this character trait has evolved over time (Porter)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "previous_state": {
+            "type": "string"
+          },
+          "current_state": {
+            "type": "string"
+          },
+          "trigger_event": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

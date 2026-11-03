@@ -1,0 +1,42 @@
+# Organizational Character Interview Template
+# Target Layer: L6
+# Output: CharacterEntry (espoused + in_use)
+
+interview:
+  type: "org-character"
+  name_zh: "组织性格访谈"
+  target_layer: "L6"
+  duration_minutes: 60
+  interviewee_profile: "Long-tenured employees across levels, HR/OD professionals"
+  output_entry_type: "CharacterEntry"
+
+  core_questions:
+    1: "What behaviors does the company officially encourage? What actually gets rewarded?"
+    2: "What is absolutely forbidden here? What actually gets a slap on the wrist?"
+    3: "When facing a risky decision, what does the team typically do?"
+    4: "Describe the last time someone failed at something ambitious. What happened to them?"
+    5: "How are decisions really made here? Top-down, consensus, or something else?"
+    6: "When the CEO says 'we value X', does the organization actually behave that way?"
+    7: "How does information flow in this organization? Freely or through gatekeepers?"
+    8: "What's the unwritten rule everyone knows but nobody says out loud?"
+    9: "When customer needs conflict with internal processes, what wins?"
+    10: "How does the organization handle bad news? Shoot the messenger or learn from it?"
+
+  follow_up_prompts:
+    - "Give me a specific example of that behavior."
+    - "Has this changed over the years? How?"
+    - "Would a new employee figure this out quickly or get surprised?"
+
+  extraction_rules:
+    dual_capture: true  # Always capture both espoused and in_use
+    gap_assessment: "Rate gap severity: none/minor/significant/critical"
+    ai_follow_rule: "When gap is significant or critical, AI follows in_use with risk backstop"
+    dimension_mapping:
+      q1_q2: "self_criticism"
+      q3_q4: "risk_appetite"
+      q5: "internal_communication"
+      q6: "espoused_vs_in_use_general"
+      q7: "internal_communication"
+      q8: "norm"
+      q9: "customer_orientation"
+      q10: "self_criticism"

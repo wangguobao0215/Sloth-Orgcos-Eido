@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrgCOS L1 Ontology Layer - Content Schema",
+  "description": "Defines content field constraints for L1 EntityDefinition entries",
+  "type": "object",
+  "required": [
+    "entity_type",
+    "attributes"
+  ],
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "description": "Reference to one of the 10 universal entity types or a T2-extended type",
+      "enum": [
+        "Enterprise",
+        "OrgUnit",
+        "Role",
+        "Person",
+        "Customer",
+        "Product",
+        "Partner",
+        "Competitor",
+        "Market",
+        "Capability"
+      ]
+    },
+    "attributes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "integer",
+              "float",
+              "boolean",
+              "date",
+              "enum",
+              "array",
+              "ref"
+            ]
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "description": {
+            "type": "string"
+          },
+          "enum_values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "relation_type",
+          "target_entity_type"
+        ],
+        "properties": {
+          "relation_type": {
+            "type": "string"
+          },
+          "target_entity_type": {
+            "type": "string"
+          },
+          "cardinality": {
+            "type": "string",
+            "enum": [
+              "1:1",
+              "1:N",
+              "N:1",
+              "N:M"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "outgoing",
+              "incoming",
+              "bidirectional"
+            ]
+          }
+        }
+      }
+    },
+    "multi_perspective": {
+      "type": "object",
+      "description": "P7 Multi-perspective orthogonal attributes (Zachman principle)",
+      "properties": {
+        "strategic_view": {
+          "type": "object",
+          "properties": {
+            "importance": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "rationale": {
+              "type": "string"
+            },
+            "strategic_link": {
+              "type": "string",
+              "description": "Reference to L2 StrategicStatement id"
+            }
+          }
+        },
+        "operational_view": {
+          "type": "object",
+          "properties": {
+            "interaction_protocol": {
+              "type": "string"
+            },
+            "contact_points": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "response_sla": {
+              "type": "string"
+            }
+          }
+        },
+        "technical_view": {
+          "type": "object",
+          "properties": {
+            "system_refs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "system": {
+                    "type": "string"
+                  },
+                  "entity_id": {
+                    "type": "string"
+                  },
+                  "field_mapping": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid_time_range": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "date"
+        },
+        "until": {
+          "type": "string"
+        }
+      }
+    },
+    "system_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "External system identifiers for this entity"
+    }
+  },
+  "additionalProperties": false
+}
